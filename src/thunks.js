@@ -1,16 +1,20 @@
 import { actions } from './redux-store';
+import { eventGuid } from './selectors'
 
 const API_BASE = 'http://localhost:5000'
 
-const fetchUserIds = () => (dispatch) => {
+const fetchUserIds = (triesLeft) => (dispatch) => {
   return fetch(`${API_BASE}/user_ids`).then((response) => {
     if (!response.ok) {
+      if (triesLeft > 0 && Math.trunc(response.status/100) !== 4){
+        setTimeout(() => fetchUserIds(--triesLeft)(dispatch), 1000);
+      }
       return dispatch({
         type: actions.FETCH_USERS_ERROR,
-      })
+      });
     }
 
-    return response.json
+    return response.json()
   }, err => {
     throw err
   }).then(data => {
@@ -19,9 +23,12 @@ const fetchUserIds = () => (dispatch) => {
       payload: data
     })
   }, err => {
+    if (triesLeft > 0) {
+      setTimeout(() => fetchUserIds(--triesLeft)(dispatch), 10000);
+    }
     return dispatch({
       type: actions.FETCH_USERS_ERROR
-    })
+    });
   })
 }
 
@@ -75,7 +82,7 @@ const fetchSelectedEventDetails = () => (dispatch, getState) => {
   const { selectedEvents, events } = getState()
   return Promise.all(
     events.filter(event => {
-      return !!selectedEvents[event.created_at + '-' + event.id]
+      return !!selectedEvents[eventGuid(event)]
     }).map(event => {
       return fetch(API_BASE + event.url).then((response) => {
         if (!response.ok) {
@@ -87,6 +94,9 @@ const fetchSelectedEventDetails = () => (dispatch, getState) => {
       })
     })
   ).then(values => {
+    dispatch({
+      type: actions.COMPARE_SELECTED_EVENTS
+    });
     return dispatch({
       type: actions.EVENT_DETAILS_SUCCESS,
       payload: values

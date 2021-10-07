@@ -16,7 +16,7 @@ import "./index.css";
  */
 const rootElement = document.getElementById('root')
 
-store.dispatch(fetchUserIds())
+store.dispatch(fetchUserIds(5))
 ReactDOM.render(
   <Provider store={store}>
     <App />

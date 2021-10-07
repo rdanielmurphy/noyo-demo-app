@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { fetchAddresses, fetchEvents, fetchSelectedEventDetails } from './thunks'
 import { eventGuid, canSelectEvents, undeletedAddresses } from './selectors'
 import { actions } from './redux-store'
+import { CompareModal } from './partials/CompareModal/CompareModal'
 
 
 //--> User select form
@@ -75,7 +76,7 @@ const handleCompareClick = (dispatch) => (e) => {
    * and referenced in the comment below on line 78.
    */
 
-  // dispatch(fetchSelectedEventDetails())
+  dispatch(fetchSelectedEventDetails())
 }
 
 let EventList = ({dispatch, canCompare, events}) => {
@@ -121,6 +122,7 @@ Address = connect((state, ownProps) => {
 let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, error} ) => {
   return <>
     {error ? <p className="error">{error}</p> : ''}
+    {comparingEvents && <CompareModal /> }   
     {userIds && userIds.length ?
       <UserSelectForm userIds={userIds} selectedUserId={selectedUserId} />
     : ''}

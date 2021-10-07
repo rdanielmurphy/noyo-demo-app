@@ -21,7 +21,7 @@ const reducer = (state, action) => {
   switch (action.type) {
     case actions.FETCH_USERS_SUCCESS:
       return Object.assign({}, state, {
-        userIds : action.payload
+        userIds : action.payload,
       })
     case actions.FETCH_USERS_ERROR:
       return Object.assign({}, state, {
@@ -123,7 +123,7 @@ const store = createStore(reducer, initialState, applyMiddleware(thunk))
  */
 const rootElement = document.getElementById('root')
 
-store.dispatch(fetchUserIds())
+store.dispatch(fetchUserIds(5))
 ReactDOM.render(
   <Provider store={store}>
     <App />

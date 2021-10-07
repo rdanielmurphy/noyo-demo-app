@@ -1,7 +1,7 @@
 const MAX_SELECTED_EVENTS = 2
 
 const eventGuid = (evt) => {
-  return evt.created_at + "-" + evt.id
+  return evt.type + " | " + evt.created_at + "-" + evt.id
 }
 
 const canSelectEvents = (selectedEvents) => {

@@ -8,6 +8,8 @@ const actions = {
   FETCH_USERS_SUCCESS: 'fetch_users_success', // really doesn't matter what the values are
   FETCH_USERS_ERROR: 'fetch_users_error',
   CHANGE_SELECTED_USER_ID: 'change_selected_user_id',
+  CLOSE_COMPARE_SELECTED_EVENTS: 'close_compare_selected_events',
+  COMPARE_SELECTED_EVENTS: 'compare_selected_events',
   FETCH_ADDRESS_SUCCESS: 'fetch_address_success',
   FETCH_ADDRESS_ERROR: 'fetch_address_error',
   REQUEST_ADDRESS_DETAILS: 'request_address_details',
@@ -25,7 +27,8 @@ const reducer = (state, action) => {
     case actions.FETCH_USERS_SUCCESS:
       return {
         ...state,
-        userIds : action.payload
+        userIds : action.payload,
+        error: undefined,
       }
     case actions.FETCH_USERS_ERROR:
       return {
@@ -95,6 +98,11 @@ const reducer = (state, action) => {
         ...state,
         comparingEvents : true
       }
+      case actions.CLOSE_COMPARE_SELECTED_EVENTS:
+        return {
+          ...state,
+          comparingEvents : false
+        }
     case actions.EVENT_DETAILS_SUCCESS:
       return {
         ...state,
